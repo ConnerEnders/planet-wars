@@ -93,7 +93,7 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 0.14217694, g: 0.5634969, b: 0.6698113, a: 0.99398386}
+    - _Color: {r: 0.14217694, g: 0.5634969, b: 0.6698113, a: 1}
     - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0.6978211, g: 1.002134, b: 0.44597587, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}

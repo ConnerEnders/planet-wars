@@ -20,4 +20,10 @@ public class FuelBar : MonoBehaviour
         Color color = fuelBarImage.material.color;
         fuelBarImage.material.color = new Color(color.r, color.g, color.b, Mathf.Sin(Time.time * 2f) / 32f + 31f / 32f);
     }
+
+    private void OnDestroy()
+    {
+        Color color = fuelBarImage.material.color;
+        fuelBarImage.material.color = new Color(color.r, color.g, color.b, 1f);
+    }
 }

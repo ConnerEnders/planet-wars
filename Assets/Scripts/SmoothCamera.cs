@@ -5,14 +5,13 @@ public class SmoothCamera : MonoBehaviour
     [SerializeField] float height;
     [SerializeField] float distance;
     [SerializeField] float speed;
-    public bool isFlying = false;
-
-    Transform target;
+    [SerializeField] Transform target;
     Vector3 moveVelocity;
 
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Astronaut").transform;
+        transform.position = target.position - target.forward * distance + target.up * height;
+        transform.LookAt(target, target.up);
     }
 
     void FixedUpdate()

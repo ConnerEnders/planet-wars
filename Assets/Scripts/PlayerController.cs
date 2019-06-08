@@ -11,20 +11,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float walkSpeed;
     [SerializeField] float jumpForce;
     [SerializeField] float chargeSpeed;
+    [SerializeField] Image fuelBar;
+    [SerializeField] ParticleSystem jetPackFire;
+    [SerializeField] ParticleSystem jetPackSmoke;
+    [SerializeField] Light jetPackLight;
 
     float xVelocity;
     float zVelocity;
-    public bool grounded;
+    bool onGround;
     Vector3 moveAmount;
     Vector3 sideMoveAmount;
     Vector3 smoothMoveVelocity;
     Rigidbody rigidBody;
     Animator animator;
-    ParticleSystem jetPackFire;
-    ParticleSystem jetPackSmoke;
-    Light jetPackLight;
     Vector2 touchDeltaPosition;
-    Image fuelBar;
     bool charging = false;
 
     void Awake()
@@ -32,10 +32,6 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         rigidBody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        jetPackFire = GameObject.Find("Fire").GetComponent<ParticleSystem>();
-        jetPackSmoke = GameObject.Find("Smoke").GetComponent<ParticleSystem>();
-        jetPackLight = GameObject.Find("JetPackLight").GetComponent<Light>();
-        fuelBar = GameObject.Find("FuelBar").GetComponent<Image>();
     }
 
     void Update()
@@ -56,18 +52,13 @@ public class PlayerController : MonoBehaviour
         Vector3 targetMoveAmount = moveDir * moveSpeed;
         moveAmount = Vector3.SmoothDamp(moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 
-        Vector3 sideMove = new Vector3(inputX, 0, 0).normalized;
-        Vector3 targetsSideMoveAmount = sideMove * sideSpeed;
-        sideMoveAmount = Vector3.SmoothDamp(moveAmount, targetsSideMoveAmount, ref smoothMoveVelocity, .15f);
+        //Vector3 sideMove = new Vector3(inputX, 0, 0).normalized;
+        //Vector3 targetsSideMoveAmount = sideMove * sideSpeed;
+        //sideMoveAmount = Vector3.SmoothDamp(moveAmount, targetsSideMoveAmount, ref smoothMoveVelocity, .15f);
 
         if (Input.GetButton("Jump") && fuelBar.fillAmount > .01f)
         {
-            if (inputY > 0)
-                rigidBody.AddForce(transform.up * jumpForce / 2 + transform.forward * jumpForce / 2);
-            else if (inputY < 0)
-                rigidBody.AddForce(transform.up * jumpForce / 2 + -transform.forward * jumpForce / 2);
-            else
-                rigidBody.AddForce(transform.up * jumpForce);
+            rigidBody.AddForce(transform.up * jumpForce / 2 + inputY * transform.forward * jumpForce / 2);
 
             if (!jetPackFire.isPlaying || !jetPackSmoke.isPlaying)
             {
@@ -84,16 +75,8 @@ public class PlayerController : MonoBehaviour
             jetPackLight.enabled = false;
         }
 
-        if (grounded)
-        {
-            animator.SetFloat("Forward", inputY, 0.1f, Time.deltaTime);
-            animator.SetFloat("Turn", inputX, 0.1f, Time.deltaTime);
-        }
-        else
-        {
-            animator.SetFloat("Forward", 0f, 1f, Time.deltaTime);
-            animator.SetFloat("Turn", 0f, 1f, Time.deltaTime);
-        }
+        animator.SetFloat("Forward", inputY, 0.1f, Time.deltaTime);
+        animator.SetFloat("Turn", inputX, 0.1f, Time.deltaTime);
 
         if (charging && fuelBar.fillAmount < 1f)
         {
@@ -103,13 +86,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Mouse X") * rotateSpeed, 0);
+        //Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Mouse X") * rotateSpeed, 0);
+        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
         rigidBody.rotation = Quaternion.Lerp(rigidBody.rotation, wantedRotation, 0.1f);
 
         Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
         rigidBody.MovePosition(rigidBody.position + localMove);
-        Vector3 localSideMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
-        rigidBody.MovePosition(rigidBody.position + localSideMove);
+        //Vector3 localSideMove = transform.TransformDirection(sideMoveAmount) * Time.fixedDeltaTime;
+        //rigidBody.MovePosition(rigidBody.position + localSideMove);
     }
 
     private void OnTriggerEnter(Collider collision)
