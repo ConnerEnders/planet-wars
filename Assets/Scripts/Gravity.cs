@@ -19,6 +19,10 @@ public class Gravity : MonoBehaviour
         {
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         }
+        if (planet == null)
+        {
+            planet = GameObject.FindWithTag("Planet").GetComponent<Transform>();
+        }
     }
 
     void FixedUpdate()

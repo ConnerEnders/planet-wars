@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 4282870875599692433}
   - component: {fileID: 4207136916465394763}
   m_Layer: 9
-  m_Name: Astro 1
+  m_Name: Astro
   m_TagString: Astronaut
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,6 +169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb55d2bccc81384c8b832652327b44e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: -9.8
+  fixRotation: 1
   planet: {fileID: 0}
 --- !u!114 &4184714975274537507
 MonoBehaviour:
@@ -182,6 +184,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0672174c899f05545a327552846a8d18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shot: {fileID: 1924354017757682412, guid: d66ce9691da204492b776ba8bc7e4fab, type: 3}
+  fuelBar: {fileID: 0}
+  jetPackFire: {fileID: 4126464149236935305}
+  jetPackSmoke: {fileID: 4127544026800654387}
+  jetPackLight: {fileID: 4181471082645154121}
   lookSpeed: 0.2
   rotateSpeed: 40
   backSpeed: 3
@@ -189,7 +196,11 @@ MonoBehaviour:
   walkSpeed: 6
   jumpForce: 10
   chargeSpeed: 0.001
-  grounded: 1
+  shotSpeed: 450
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  jumpButton: Jump
+  fireButton: Fire
 --- !u!65 &4282870875599692433
 BoxCollider:
   m_ObjectHideFlags: 0

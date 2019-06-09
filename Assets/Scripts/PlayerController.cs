@@ -4,6 +4,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Gravity))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] GameObject shot;
+    [SerializeField] Image fuelBar;
+    [SerializeField] ParticleSystem jetPackFire;
+    [SerializeField] ParticleSystem jetPackSmoke;
+    [SerializeField] Light jetPackLight;
     [SerializeField] float lookSpeed;
     [SerializeField] float rotateSpeed;
     [SerializeField] float backSpeed;
@@ -11,10 +16,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float walkSpeed;
     [SerializeField] float jumpForce;
     [SerializeField] float chargeSpeed;
-    [SerializeField] Image fuelBar;
-    [SerializeField] ParticleSystem jetPackFire;
-    [SerializeField] ParticleSystem jetPackSmoke;
-    [SerializeField] Light jetPackLight;
+    [SerializeField] float shotSpeed;
+    [SerializeField] string horizontalAxis;
+    [SerializeField] string verticalAxis;
+    [SerializeField] string jumpButton;
+    [SerializeField] string fireButton;
 
     float xVelocity;
     float zVelocity;
@@ -36,8 +42,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        float inputY = Input.GetAxisRaw("Vertical");
-        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputY = Input.GetAxisRaw(verticalAxis);
+        float inputX = Input.GetAxisRaw(horizontalAxis);
 
         Vector3 moveDir = new Vector3(0, 0, inputY).normalized;
         float moveSpeed;
@@ -56,7 +62,7 @@ public class PlayerController : MonoBehaviour
         //Vector3 targetsSideMoveAmount = sideMove * sideSpeed;
         //sideMoveAmount = Vector3.SmoothDamp(moveAmount, targetsSideMoveAmount, ref smoothMoveVelocity, .15f);
 
-        if (Input.GetButton("Jump") && fuelBar.fillAmount > .01f)
+        if (Input.GetButton(jumpButton) && fuelBar.fillAmount > .01f)
         {
             rigidBody.AddForce(transform.up * jumpForce / 2 + inputY * transform.forward * jumpForce / 2);
 
@@ -75,6 +81,18 @@ public class PlayerController : MonoBehaviour
             jetPackLight.enabled = false;
         }
 
+        if (Input.GetAxis(fireButton) > 0f && fuelBar.fillAmount > .6f)
+        {
+            fuelBar.fillAmount -= .6f;
+            GameObject newShot = Instantiate(shot);
+            Transform shotTransform = newShot.GetComponent<Transform>();
+            Rigidbody shotRigidbody = newShot.GetComponent<Rigidbody>();
+
+            shotTransform.position = transform.position + transform.up * 2f + transform.forward * 2f;
+            shotTransform.forward = transform.forward;
+            shotRigidbody.AddForce(shotTransform.forward * shotSpeed);
+        }
+
         animator.SetFloat("Forward", inputY, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", inputX, 0.1f, Time.deltaTime);
 
@@ -87,7 +105,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         //Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Mouse X") * rotateSpeed, 0);
-        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
+        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis(horizontalAxis) * rotateSpeed, 0);
         rigidBody.rotation = Quaternion.Lerp(rigidBody.rotation, wantedRotation, 0.1f);
 
         Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
@@ -101,7 +119,11 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.CompareTag("Light"))
         {
             charging = true;
-            Debug.Log("CHARGING");
+        }
+        if (collision.gameObject.CompareTag("Shot"))
+        {
+            Debug.Log("Hit");
+            Destroy(collision.gameObject);
         }
     }
 
