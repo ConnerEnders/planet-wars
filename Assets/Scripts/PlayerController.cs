@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject shot;
+    [SerializeField] GameObject shotOrbit;
     [SerializeField] Image fuelBar;
     [SerializeField] ParticleSystem jetPackFire;
     [SerializeField] ParticleSystem jetPackSmoke;
@@ -12,7 +13,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float lookSpeed;
     [SerializeField] float rotateSpeed;
     [SerializeField] float backSpeed;
-    [SerializeField] float sideSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float jumpForce;
     [SerializeField] float chargeSpeed;
@@ -58,13 +58,9 @@ public class PlayerController : MonoBehaviour
         Vector3 targetMoveAmount = moveDir * moveSpeed;
         moveAmount = Vector3.SmoothDamp(moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
 
-        //Vector3 sideMove = new Vector3(inputX, 0, 0).normalized;
-        //Vector3 targetsSideMoveAmount = sideMove * sideSpeed;
-        //sideMoveAmount = Vector3.SmoothDamp(moveAmount, targetsSideMoveAmount, ref smoothMoveVelocity, .15f);
-
         if (Input.GetButton(jumpButton) && fuelBar.fillAmount > .01f)
         {
-            rigidBody.AddForce(transform.up * jumpForce / 2 + inputY * transform.forward * jumpForce / 2);
+            rigidBody.AddForce(transform.up * jumpForce / 2f + inputY * transform.forward * jumpForce / 2f);
 
             if (!jetPackFire.isPlaying || !jetPackSmoke.isPlaying)
             {
@@ -85,12 +81,15 @@ public class PlayerController : MonoBehaviour
         {
             fuelBar.fillAmount -= .6f;
             GameObject newShot = Instantiate(shot);
+            GameObject newShotOrbit = Instantiate(shotOrbit);
             Transform shotTransform = newShot.GetComponent<Transform>();
-            Rigidbody shotRigidbody = newShot.GetComponent<Rigidbody>();
+            //Rigidbody shotRigidbody = newShot.GetComponent<Rigidbody>();
 
             shotTransform.position = transform.position + transform.up * 2f + transform.forward * 2f;
-            shotTransform.forward = transform.forward;
-            shotRigidbody.AddForce(shotTransform.forward * shotSpeed);
+            newShotOrbit.transform.LookAt(newShot.transform, transform.up);
+            newShot.transform.SetParent(newShotOrbit.transform);
+            //shotTransform.forward = transform.forward;
+            //shotRigidbody.AddForce(shotTransform.forward * shotSpeed);
         }
 
         animator.SetFloat("Forward", inputY, 0.1f, Time.deltaTime);

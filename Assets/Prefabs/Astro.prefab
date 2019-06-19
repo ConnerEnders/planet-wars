@@ -56,6 +56,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -185,6 +186,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shot: {fileID: 1924354017757682412, guid: d66ce9691da204492b776ba8bc7e4fab, type: 3}
+  shotOrbit: {fileID: 2977643221662255902, guid: 777d83fa81370459eadfb419448d417b,
+    type: 3}
   fuelBar: {fileID: 0}
   jetPackFire: {fileID: 4126464149236935305}
   jetPackSmoke: {fileID: 4127544026800654387}
@@ -192,11 +195,10 @@ MonoBehaviour:
   lookSpeed: 0.2
   rotateSpeed: 40
   backSpeed: 3
-  sideSpeed: 4
   walkSpeed: 6
   jumpForce: 10
   chargeSpeed: 0.001
-  shotSpeed: 450
+  shotSpeed: 400
   horizontalAxis: Horizontal
   verticalAxis: Vertical
   jumpButton: Jump
@@ -4954,6 +4956,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -9706,6 +9709,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14649,6 +14653,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

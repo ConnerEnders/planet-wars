@@ -18,4 +18,12 @@ public class Kick : MonoBehaviour
             rigidBody.AddForce(collision.transform.forward * force);
         }
     }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Shot"))
+        {
+            rigidBody.AddForce(collision.transform.forward * force);
+        }
+    }
 }
