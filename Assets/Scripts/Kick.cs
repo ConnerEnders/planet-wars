@@ -15,7 +15,7 @@ public class Kick : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Astronaut"))
         {
-            rigidBody.AddForce(collision.transform.forward * force);
+            rigidBody.AddForce((transform.position - collision.transform.position) * force);
         }
     }
 
@@ -23,7 +23,7 @@ public class Kick : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Shot"))
         {
-            rigidBody.AddForce(collision.transform.forward * force);
+            rigidBody.AddForce((transform.position - collision.transform.position) * force);
         }
     }
 }

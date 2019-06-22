@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1953583401}
-  m_IndirectSpecularColor: {r: 0.124246426, g: 0.12428949, b: 0.2644183, a: 1}
+  m_IndirectSpecularColor: {r: 0.13008606, g: 0.13014933, b: 0.2749232, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -126,12 +126,76 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1162547906}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &208490742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 208490744}
+  - component: {fileID: 208490743}
+  m_Layer: 0
+  m_Name: PlanetCeiling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!64 &208490743
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208490742}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300002, guid: 103612e5e1ff43a4e896c567a2cb3ae1, type: 3}
+--- !u!4 &208490744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208490742}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 16, y: 16, z: 16}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &242675024 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 4181471082645154121, guid: 4246c5f38760944afab975fb035bc2ec,
     type: 3}
   m_PrefabInstance: {fileID: 4289298919362051469}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &271792156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9186358603247513372, guid: 6b0571ba46e383b44ba7d37ed11a93ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 9186358602139906213}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &271792160
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271792156}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.0107
+  m_Center: {x: 0.000000013038516, y: -0.000000012572855, z: -0.00022833701}
 --- !u!1 &408947688 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2108129476571453500, guid: adf1df322e90347d181f8f099c2d1350,
@@ -339,6 +403,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1500817473}
+    - target: {fileID: 8204741983162446749, guid: 48bd3e0dbc49f41279faec6a34c88cda,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48bd3e0dbc49f41279faec6a34c88cda, type: 3}
 --- !u!1001 &504196788
@@ -642,6 +711,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
+    - target: {fileID: 1172499609064303003, guid: dec1917841b784cb0b9bcb63b9e802d1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 1172499609064303007, guid: dec1917841b784cb0b9bcb63b9e802d1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -702,6 +776,11 @@ PrefabInstance:
       propertyPath: planet
       value: 
       objectReference: {fileID: 1175248826}
+    - target: {fileID: 1172499609064303004, guid: dec1917841b784cb0b9bcb63b9e802d1,
+        type: 3}
+      propertyPath: force
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dec1917841b784cb0b9bcb63b9e802d1, type: 3}
 --- !u!1001 &1162547906
@@ -1864,7 +1943,7 @@ PrefabInstance:
     - target: {fileID: 8204741983162446746, guid: 48bd3e0dbc49f41279faec6a34c88cda,
         type: 3}
       propertyPath: distance
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48bd3e0dbc49f41279faec6a34c88cda, type: 3}

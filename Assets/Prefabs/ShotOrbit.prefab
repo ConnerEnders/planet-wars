@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -3926897424189839907}
   m_Layer: 0
   m_Name: ShotOrbit
-  m_TagString: Untagged
+  m_TagString: Shot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc086ca4f8ba542fe88f8594daa3aff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 1
+  rotateSpeed: 2

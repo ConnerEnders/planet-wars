@@ -10,13 +10,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ParticleSystem jetPackFire;
     [SerializeField] ParticleSystem jetPackSmoke;
     [SerializeField] Light jetPackLight;
-    [SerializeField] float lookSpeed;
+    [SerializeField] Light flashlight;
     [SerializeField] float rotateSpeed;
     [SerializeField] float backSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float jumpForce;
     [SerializeField] float chargeSpeed;
-    [SerializeField] float shotSpeed;
+    [SerializeField] float dashMultiplier;
+    [SerializeField] float dashEnergy;
+    [SerializeField] float shotEnergy;
     [SerializeField] string horizontalAxis;
     [SerializeField] string verticalAxis;
     [SerializeField] string jumpButton;
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     Vector2 touchDeltaPosition;
     bool charging = false;
+    float moveMultiplier = 1f;
 
     void Awake()
     {
@@ -41,6 +44,26 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+    {
+        move();
+        shoot();
+        dash();
+        charge();
+    }
+
+    void FixedUpdate()
+    {
+        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis(horizontalAxis) * rotateSpeed * (moveMultiplier > 1 ? 2 : 1), 0);
+        rigidBody.rotation = Quaternion.Lerp(rigidBody.rotation, wantedRotation, 0.1f);
+
+        if (onGround)
+        {
+            Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
+            rigidBody.MovePosition(rigidBody.position + localMove);
+        }
+    }
+
+    private void move()
     {
         float inputY = Input.GetAxisRaw(verticalAxis);
         float inputX = Input.GetAxisRaw(horizontalAxis);
@@ -55,12 +78,33 @@ public class PlayerController : MonoBehaviour
         {
             moveSpeed = backSpeed;
         }
-        Vector3 targetMoveAmount = moveDir * moveSpeed;
+        Vector3 targetMoveAmount = moveDir * moveSpeed * moveMultiplier;
         moveAmount = Vector3.SmoothDamp(moveAmount, targetMoveAmount, ref smoothMoveVelocity, .15f);
+        animator.SetFloat("Forward", inputY * (moveMultiplier > 1 ? 2 : 1), 0.1f, Time.deltaTime);
+        animator.SetFloat("Turn", inputX, 0.1f, Time.deltaTime);
+    }
 
-        if (Input.GetButton(jumpButton) && fuelBar.fillAmount > .01f)
+    private void shoot()
+    {
+        if (Input.GetAxis(fireButton) > 0f && fuelBar.fillAmount > .6f)
         {
-            rigidBody.AddForce(transform.up * jumpForce / 2f + inputY * transform.forward * jumpForce / 2f);
+            fuelBar.fillAmount -= shotEnergy;
+            GameObject newShot = Instantiate(shot);
+            GameObject newShotOrbit = Instantiate(shotOrbit);
+            Transform shotTransform = newShot.GetComponent<Transform>();
+
+            shotTransform.position = transform.position + transform.up * 2f + transform.forward * 2f;
+            newShotOrbit.transform.LookAt(newShot.transform, transform.up);
+            newShot.transform.SetParent(newShotOrbit.transform);
+        }
+    }
+
+    private void dash()
+    {
+        if (Input.GetButton(jumpButton) && fuelBar.fillAmount > .005f)
+        {
+            rigidBody.AddForce(-transform.up * 50);
+            moveMultiplier = dashMultiplier;
 
             if (!jetPackFire.isPlaying || !jetPackSmoke.isPlaying)
             {
@@ -68,61 +112,39 @@ public class PlayerController : MonoBehaviour
                 jetPackSmoke.Play();
             }
             jetPackLight.enabled = true;
-            fuelBar.fillAmount -= .01f;
+            fuelBar.fillAmount -= dashEnergy;
         }
         else
         {
+            moveMultiplier = 1f;
             jetPackFire.Stop();
             jetPackSmoke.Stop();
             jetPackLight.enabled = false;
         }
+    }
 
-        if (Input.GetAxis(fireButton) > 0f && fuelBar.fillAmount > .6f)
-        {
-            fuelBar.fillAmount -= .6f;
-            GameObject newShot = Instantiate(shot);
-            GameObject newShotOrbit = Instantiate(shotOrbit);
-            Transform shotTransform = newShot.GetComponent<Transform>();
-            //Rigidbody shotRigidbody = newShot.GetComponent<Rigidbody>();
-
-            shotTransform.position = transform.position + transform.up * 2f + transform.forward * 2f;
-            newShotOrbit.transform.LookAt(newShot.transform, transform.up);
-            newShot.transform.SetParent(newShotOrbit.transform);
-            //shotTransform.forward = transform.forward;
-            //shotRigidbody.AddForce(shotTransform.forward * shotSpeed);
-        }
-
-        animator.SetFloat("Forward", inputY, 0.1f, Time.deltaTime);
-        animator.SetFloat("Turn", inputX, 0.1f, Time.deltaTime);
-
+    private void charge()
+    {
         if (charging && fuelBar.fillAmount < 1f)
         {
             fuelBar.fillAmount += chargeSpeed;
         }
     }
 
-    void FixedUpdate()
-    {
-        //Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis("Mouse X") * rotateSpeed, 0);
-        Quaternion wantedRotation = rigidBody.rotation * Quaternion.Euler(0, Input.GetAxis(horizontalAxis) * rotateSpeed, 0);
-        rigidBody.rotation = Quaternion.Lerp(rigidBody.rotation, wantedRotation, 0.1f);
-
-        Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
-        rigidBody.MovePosition(rigidBody.position + localMove);
-        //Vector3 localSideMove = transform.TransformDirection(sideMoveAmount) * Time.fixedDeltaTime;
-        //rigidBody.MovePosition(rigidBody.position + localSideMove);
-    }
-
     private void OnTriggerEnter(Collider collision)
     {
-        if(collision.gameObject.CompareTag("Light"))
+        if (collision.gameObject.CompareTag("Light"))
         {
             charging = true;
+            flashlight.gameObject.SetActive(false);
         }
         if (collision.gameObject.CompareTag("Shot"))
         {
-            Debug.Log("Hit");
-            Destroy(collision.gameObject);
+            rigidBody.AddForce((transform.position + transform.up * 3f - collision.transform.position) * 200);
+        }
+        if (collision.gameObject.CompareTag("Planet"))
+        {
+            onGround = true;
         }
     }
 
@@ -131,6 +153,11 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Light"))
         {
             charging = false;
+            flashlight.gameObject.SetActive(true);
+        }
+        if (collision.gameObject.CompareTag("Planet"))
+        {
+            onGround = false;
         }
     }
 }
