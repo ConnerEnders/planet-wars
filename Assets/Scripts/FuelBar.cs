@@ -4,8 +4,6 @@ using UnityEngine.UI;
 public class FuelBar : MonoBehaviour
 {
     Image fuelBarImage;
-    [SerializeField] Material dimFuelMaterial;
-    [SerializeField] Material brightFuelMaterial;
 
     void Start()
     {
@@ -16,9 +14,8 @@ public class FuelBar : MonoBehaviour
 
     private void Update()
     {
-        fuelBarImage.material = dimFuelMaterial;
         Color color = fuelBarImage.material.color;
-        fuelBarImage.material.color = new Color(color.r, color.g, color.b, Mathf.Sin(Time.time * 2f) / 32f + 31f / 32f);
+        fuelBarImage.material.color = new Color(color.r, color.g, color.b, Mathf.Sin(Time.time * 2f) / 16f + 15f / 16f);
     }
 
     private void OnDestroy()
